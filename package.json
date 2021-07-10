@@ -1,0 +1,22 @@
+{
+  "name": "client-api",
+  "version": "1.0.0",
+  "description": "Client Side API for CRM Frontend",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "author": "Olu Shokunbi",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "helmet": "^4.6.0",
+    "mongoose": "^5.13.2",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.11"
+  }
+}
