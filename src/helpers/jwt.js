@@ -1,14 +1,20 @@
 const jwt = require("jsonwebtoken");
+const { setJWT, getJWT } = require("./redis");
 
-const createAccessJWT = (payload) => {
-  const accessJWT = jwt.sign({ payload }, process.env.JWT_ACCESS_TOKEEN, {
-    expiresIn: "15m",
-  });
+const createAccessJWT = async (email, id) => {
+  try {
+    const accessJWT = await jwt.sign({ email }, process.env.JWT_ACCESS_TOKEEN, {
+      expiresIn: "15m",
+    });
 
-  return Promise.resolve(accessJWT);
+    await setJWT(accessJWT, id);
+    return Promise.resolve(accessJWT);
+  } catch (err) {
+    return Promise.reject(err);
+  }
 };
 
-const createRefreshJWT = (payload) => {
+const createRefreshJWT = async (payload) => {
   const refreshJWT = jwt.sign({ payload }, process.env.JWT_REFRESH_TOKEN, {
     expiresIn: "30d",
   });
