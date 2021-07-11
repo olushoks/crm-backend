@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { createUser, getUserByEmail } = require("../model/user/User_Model");
 const { hashPassword, comparePassword } = require("../helpers/hash_password");
+const { createAccessJWT, createRefreshJWT } = require("../helpers/jwt");
 
 router.all("/", (req, res, next) => {
   // res.json({ message: "return user from route" });
@@ -46,7 +47,15 @@ router.post("/login", async (req, res) => {
     return res.json({ status: "error", message: "invalid credentials" });
   }
 
-  res.json({ status: "success", message: "Login successfull!" });
+  const accessJWT = await createAccessJWT(user.email);
+  const refreshJWT = await createRefreshJWT(user.email);
+
+  res.json({
+    status: "success",
+    message: "Login successfull!",
+    accessJWT,
+    refreshJWT,
+  });
 });
 
 module.exports = router;

@@ -16,5 +16,5 @@ Content-Type: application/json
 
 {
     "email": "olu_shoks@pazcarrus.org",
-    "password": "secret4567"
+    "password": "secret456"
 }
