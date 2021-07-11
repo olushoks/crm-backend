@@ -46,7 +46,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // API Security
-app.use(helmet());
+// app.use(helmet());
 
 // user route
 app.use("/v1/user", userRoute);

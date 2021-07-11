@@ -1,0 +1,20 @@
+### User sign up endpoint
+POST http://localhost:5000/v1/user HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Olu Shoks",
+    "company": "Paz Carrus",
+    "address": "Dallas TX",
+    "phone": "08012345678",
+    "email": "olu_shoks@pazcarrus.org",
+    "password": "secret456"
+}
+### User sign in endpoint
+POST http://localhost:5000/v1/user/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "olu_shoks@pazcarrus.org",
+    "password": "secret4567"
+}
