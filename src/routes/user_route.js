@@ -20,9 +20,6 @@ router.get("/", userAuth, async (req, res) => {
 
   const userProfile = await getUserById(_id);
   res.json({ user: userProfile });
-
-  //3. extract userid
-  //4. get profle based on user
 });
 
 // create new user route

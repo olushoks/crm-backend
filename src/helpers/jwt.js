@@ -36,8 +36,17 @@ const verifyAccessJWT = (userJWT) => {
   }
 };
 
+const verifyResfreshJWT = (userJWT) => {
+  try {
+    return Promise.resolve(jwt.verify(userJWT, process.env.JWT_REFRESH_TOKEN));
+  } catch (error) {
+    return Promise.resolve(error);
+  }
+};
+
 module.exports = {
   createAccessJWT,
   createRefreshJWT,
   verifyAccessJWT,
+  verifyResfreshJWT,
 };

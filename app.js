@@ -8,6 +8,7 @@ const morgan = require("morgan");
 // ROUTER
 const userRoute = require("./src/routes/user_route");
 const ticketRoute = require("./src/routes/ticket_route");
+const tokenRoute = require("./src/routes/token_route");
 // ERROR HANDLER
 const handleError = require("./src/utilities/error_handler");
 // PORT
@@ -52,6 +53,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/v1/user", userRoute);
 // ticket route
 app.use("/v1/ticket", ticketRoute);
+// tokens route
+app.use("/v1/token", tokenRoute);
 
 app.use((req, res, next) => {
   const error = new Error("Resource unknown");
