@@ -25,4 +25,29 @@ const getUserByEmail = (email) => {
   });
 };
 
-module.exports = { createUser, getUserByEmail };
+const storeRefreshJWT = (token, _id) => {
+  return new Promise((resolve, reject) => {
+    try {
+      UserSchema.findOneAndUpdate(
+        { _id },
+        {
+          $set: {
+            "refreshJWT.token": token,
+            "refreshJWT.added_at": Date.now(),
+          },
+        },
+        { new: true }
+      )
+        .then((data) => resolve(data))
+        .catch((error) => {
+          // console.log(error);
+          reject(error);
+        });
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+};
+
+module.exports = { createUser, getUserByEmail, storeRefreshJWT };
