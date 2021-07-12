@@ -25,6 +25,22 @@ const getUserByEmail = (email) => {
   });
 };
 
+const getUserById = (_id) => {
+  return new Promise((resolve, reject) => {
+    if (!_id) return false;
+    try {
+      UserSchema.findOne({ _id }, (error, data) => {
+        if (error) {
+          reject(error);
+        }
+        resolve(data);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
 const storeRefreshJWT = (token, _id) => {
   return new Promise((resolve, reject) => {
     try {
@@ -50,4 +66,4 @@ const storeRefreshJWT = (token, _id) => {
   });
 };
 
-module.exports = { createUser, getUserByEmail, storeRefreshJWT };
+module.exports = { createUser, getUserByEmail, getUserById, storeRefreshJWT };
