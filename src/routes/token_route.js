@@ -12,12 +12,13 @@ router.get("/new-access-jwt", async (req, res, next) => {
 
     if (userProfile._id) {
       let tokenExp = userProfile.refreshJWT.added_at;
+      const dbRefreshToken = userProfile.refreshToken.token;
       tokenExp = tokenExp.setDate(
         tokenExp.getDate() + +process.env.JWT_REFRESH_TOKEN_EXP_IN
       );
 
       const today = new Date();
-      if (tokenExp < today) {
+      if (dbRefreshToken !== authorization && tokenExp < today) {
         return res.status(403).json({ message: "Forbidden: Kindly sign in" });
       }
 

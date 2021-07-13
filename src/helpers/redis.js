@@ -27,7 +27,16 @@ const getJWT = (key) => {
   });
 };
 
+const deleteJWT = (key) => {
+  try {
+    client.del(key);
+  } catch (error) {
+    console.log(err);
+  }
+};
+
 module.exports = {
   setJWT,
   getJWT,
+  deleteJWT,
 };
