@@ -22,7 +22,7 @@ Content-Type: application/json
 
 ### Get user profile
 GET http://localhost:5000/v1/user HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im9sdV9zaG9rc0BwYXpjYXJydXMub3JnIiwiaWF0IjoxNjI2MTM1MzQwLCJleHAiOjE2MjYxMzU0MDB9.KctqV-BLS_j4vXU97uZ1G6C2wmXaiUNWKFeuhyaVPYw
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im9sdV9zaG9rc0BwYXpjYXJydXMub3JnIiwiaWF0IjoxNjI2MTcwNDUzLCJleHAiOjE2MjYxNzEzNTN9.gf5rR0TVk8DPA_YVEYaT7YFxRD7P8XHjC0MiPNETJZo
 
 ### Get refresh token endpoint
 GET http://localhost:5000/v1/token/new-access-jwt HTTP/1.1
@@ -42,7 +42,7 @@ Content-Type: application/json
 
 {
     "email": "olu_shoks@pazcarrus.org",
-    "pin": 371238,
+    "pin": 568259,
     "newPassword": "secret789"
 }
 

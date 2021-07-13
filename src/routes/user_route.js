@@ -84,25 +84,18 @@ router.post("/reset-password", async (req, res) => {
 
   if (user && user._id) {
     const newPin = await setPasswordResetPin(email);
-    const result = await emailProcessor(email, newPin.pin);
+    await emailProcessor(email, newPin.pin);
 
-    if (result && result.messageId) {
-      return res.json({
-        status: "success",
-        messaege:
-          "if email exist in database, password reset pin will be sent shortly",
-      });
-    }
     return res.json({
-      status: "error",
-      messaege:
-        "Unable to process your request at this time, please try again later",
+      status: "success",
+      message:
+        "if email exist in database, password reset pin will be sent shortly",
     });
   }
 
   res.json({
     status: "error",
-    messaege:
+    message:
       "if email exist in database, password reset pin will be sent shortly",
   });
 });
@@ -110,6 +103,13 @@ router.post("/reset-password", async (req, res) => {
 router.patch("/reset-password", async (req, res) => {
   const { email, pin, newPassword } = req.body;
   const getPin = await verifyEmailAndResetPin(email, pin);
+
+  const pinResetDate = getPin.added_at;
+  let expiryDate = pinResetDate.setDate(pinResetDate.getDate() + 1);
+  const today = new Date();
+  if (today > expiryDate) {
+    return res.json({ status: "error", message: "invalid or expired pin" });
+  }
   res.json(getPin);
 });
 

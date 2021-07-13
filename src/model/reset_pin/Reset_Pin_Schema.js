@@ -11,6 +11,11 @@ const ResetPinSchema = new schema({
     type: String,
     required: true,
   },
+  added_at: {
+    type: Date,
+    required: true,
+    default: Date.now(),
+  },
 });
 
 module.exports = {
