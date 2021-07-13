@@ -10,7 +10,10 @@ const { createAccessJWT, createRefreshJWT } = require("../helpers/jwt");
 
 const { emailProcessor } = require("../helpers/email_sender");
 const { userAuth } = require("../middleware/auth");
-const { setPasswordResetPin } = require("../model/reset_pin/Reset_Pin_Model");
+const {
+  setPasswordResetPin,
+  verifyEmailAndResetPin,
+} = require("../model/reset_pin/Reset_Pin_Model");
 
 router.all("/", (req, res, next) => {
   // res.json({ message: "return user from route" });
@@ -102,6 +105,12 @@ router.post("/reset-password", async (req, res) => {
     messaege:
       "if email exist in database, password reset pin will be sent shortly",
   });
+});
+
+router.patch("/reset-password", async (req, res) => {
+  const { email, pin, newPassword } = req.body;
+  const getPin = await verifyEmailAndResetPin(email, pin);
+  res.json(getPin);
 });
 
 module.exports = router;
