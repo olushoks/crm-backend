@@ -8,6 +8,7 @@ const {
 const { hashPassword, comparePassword } = require("../helpers/hash_password");
 const { createAccessJWT, createRefreshJWT } = require("../helpers/jwt");
 const { userAuth } = require("../middleware/auth");
+const { setPasswordResetPin } = require("../model/reset_pin/Reset_Pin_Model");
 
 router.all("/", (req, res, next) => {
   // res.json({ message: "return user from route" });
@@ -68,6 +69,22 @@ router.post("/login", async (req, res) => {
     message: "Login successfull!",
     accessJWT,
     refreshJWT,
+  });
+});
+
+// reset password
+router.post("/reset-password", async (req, res) => {
+  const { email } = req.body;
+  const user = await getUserByEmail(email);
+
+  if (user && user._id) {
+    const newPin = await setPasswordResetPin(email);
+    return res.json({ newPin });
+  }
+
+  res.json({
+    error:
+      "if email exist in database, password reset pin will be sent shortly",
   });
 });
 

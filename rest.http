@@ -27,3 +27,13 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im9sdV9zaG9rc0Bw
 ### Get refresh token
 GET http://localhost:5000/v1/token/new-access-jwt HTTP/1.1
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im9sdV9zaG9rc0BwYXpjYXJydXMub3JnIiwiaWF0IjoxNjI2MDg5NDQzLCJleHAiOjE2Mjg2ODE0NDN9.hj7Gh4xaNlZoTZ8locv-FhJCS6AEdyjUmZKMCwJg_y4
+
+### Reset password
+POST http://localhost:5000/v1/user/reset-password HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "olu_shoks@pazcarrus.org"
+}
+    
+
