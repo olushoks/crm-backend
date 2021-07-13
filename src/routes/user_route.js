@@ -4,6 +4,8 @@ const {
   createUser,
   getUserByEmail,
   getUserById,
+  updatePassword,
+  deleteResetPin,
 } = require("../model/user/User_Model");
 const { hashPassword, comparePassword } = require("../helpers/hash_password");
 const { createAccessJWT, createRefreshJWT } = require("../helpers/jwt");
@@ -84,7 +86,11 @@ router.post("/reset-password", async (req, res) => {
 
   if (user && user._id) {
     const newPin = await setPasswordResetPin(email);
-    await emailProcessor(email, newPin.pin);
+    await emailProcessor({
+      email,
+      pin: newPin.pin,
+      type: "request-new-password",
+    });
 
     return res.json({
       status: "success",
@@ -107,10 +113,28 @@ router.patch("/reset-password", async (req, res) => {
   const pinResetDate = getPin.added_at;
   let expiryDate = pinResetDate.setDate(pinResetDate.getDate() + 1);
   const today = new Date();
+
   if (today > expiryDate) {
     return res.json({ status: "error", message: "invalid or expired pin" });
   }
-  res.json(getPin);
+
+  const hashedNewPass = await hashPassword(newPassword);
+  const user = await updatePassword({
+    email,
+    hashedNewPass,
+  });
+
+  if (user._id) {
+    await emailProcessor({ email, type: "update-password-success" });
+    return res.json({
+      status: "success",
+      message: "password has been succesfully updated",
+    });
+  }
+  res.json({
+    status: "error",
+    message: "unable to update your password, try again later",
+  });
 });
 
 module.exports = router;

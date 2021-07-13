@@ -31,4 +31,20 @@ const verifyEmailAndResetPin = (email, pin) => {
   });
 };
 
-module.exports = { setPasswordResetPin, verifyEmailAndResetPin };
+const deleteResetPin = (email, pin) => {
+  try {
+    ResetPinSchema.findOneAndDelete({ email, pin }, (error, data) => {
+      if (error) {
+        console.log(error);
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports = {
+  setPasswordResetPin,
+  verifyEmailAndResetPin,
+  deleteResetPin,
+};

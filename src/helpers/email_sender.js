@@ -25,20 +25,39 @@ const send = (info) => {
   });
 };
 
-const emailProcessor = (userEmail, pin) => {
-  let info = {
-    from: process.env.NODEMAILER_USER,
-    to: userEmail,
-    subject: "Reset Password Request",
-    text: `Here is your password reset pin: ${pin}\nIt expires in 1 day`,
-    html: `
-    <b>Hello</b>
-    <p>Here is your passwordreset pin: ${pin}</p>
-    <hr />
-    <b>Kindly note it expires in 1 day</b>
-    `,
-  };
-  send(info);
+const emailProcessor = ({ email, pin, type }) => {
+  let info = null;
+
+  switch (type) {
+    case "request-new-password":
+      info = {
+        from: process.env.NODEMAILER_USER,
+        to: email,
+        subject: "Reset Password Request",
+        text: `Here is your password reset pin: ${pin}\nIt expires in 1 day`,
+        html: `
+            <b>Hello</b>
+            <p>Here is your passwordreset pin: ${pin}</p>
+            <hr />
+            <b>Kindly note it expires in 1 day</b>`,
+      };
+      send(info);
+      break;
+    case "update-password-success":
+      info = {
+        from: process.env.NODEMAILER_USER,
+        to: email,
+        subject: "Password Updatedd",
+        text: `Your password has been succesfully updated. .You may sign in using the new password`,
+        html: `
+            <b>Hello</b>
+            <p>Your password has been succesfully updated. .You may sign in using the new password</p>`,
+      };
+      send(info);
+      break;
+    default:
+      break;
+  }
 };
 
 module.exports = {

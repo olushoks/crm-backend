@@ -22,11 +22,11 @@ Content-Type: application/json
 
 ### Get user profile
 GET http://localhost:5000/v1/user HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im9sdV9zaG9rc0BwYXpjYXJydXMub3JnIiwiaWF0IjoxNjI2MTcwNDUzLCJleHAiOjE2MjYxNzEzNTN9.gf5rR0TVk8DPA_YVEYaT7YFxRD7P8XHjC0MiPNETJZo
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im9sdV9zaG9rc0BwYXpjYXJydXMub3JnIiwiaWF0IjoxNjI2MTc3MDY4LCJleHAiOjE2MjYxNzc5Njh9.p6h20A1hDjkNknjs4dxRarN43NikfoSnrj1ne9l4ouQ
 
 ### Get refresh token endpoint
 GET http://localhost:5000/v1/token/new-access-jwt HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im9sdV9zaG9rc0BwYXpjYXJydXMub3JnIiwiaWF0IjoxNjI2MDg5NDQzLCJleHAiOjE2Mjg2ODE0NDN9.hj7Gh4xaNlZoTZ8locv-FhJCS6AEdyjUmZKMCwJg_y4
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im9sdV9zaG9rc0BwYXpjYXJydXMub3JnIiwiaWF0IjoxNjI2MTc3MDY4LCJleHAiOjE2MjYxNzc5Njh9.p6h20A1hDjkNknjs4dxRarN43NikfoSnrj1ne9l4ouQ
 
 ### Reset password endpoint
 POST http://localhost:5000/v1/user/reset-password HTTP/1.1
