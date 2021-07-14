@@ -23,9 +23,9 @@ const TicketSchema = new Schema({
     required: true,
     default: "Pendng operator responose",
   },
-  conversations: [
+  conversation: [
     {
-      message: {
+      sender: {
         type: String,
         maxlength: 50,
         required: true,
@@ -37,7 +37,7 @@ const TicketSchema = new Schema({
         required: true,
         default: "",
       },
-      send_date: {
+      sent_date: {
         type: Date,
         required: true,
         default: Date.now(),

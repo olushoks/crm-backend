@@ -12,9 +12,33 @@ router.all("/", (req, res, next) => {
 });
 
 router.post("/", async (req, res) => {
-  const { subject, sender, message } = req.body;
-  console.log(req.body);
-  res.json({ message: "Create new ticket" });
+  try {
+    const { subject, sender, message } = req.body;
+    const ticketObj = {
+      client_id: "60ed7e16904167149b99dceb",
+      subject,
+      conversation: [
+        {
+          sender,
+          message,
+        },
+      ],
+    };
+    const result = await insertTicket(ticketObj);
+
+    if (result._id) {
+      return res.json({
+        status: "success",
+        message: "New ticket has been created",
+      });
+    }
+    return res.json({
+      status: "error",
+      message: "Unablee to create the ticket. Please try again",
+    });
+  } catch (error) {
+    res.json({ status: "error", message: error.message });
+  }
 });
 
 module.exports = router;
