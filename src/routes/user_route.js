@@ -5,7 +5,6 @@ const {
   getUserByEmail,
   getUserById,
   updatePassword,
-  deleteResetPin,
 } = require("../model/user/User_Model");
 const { hashPassword, comparePassword } = require("../helpers/hash_password");
 const { createAccessJWT, createRefreshJWT } = require("../helpers/jwt");
@@ -15,7 +14,16 @@ const { userAuth } = require("../middleware/auth");
 const {
   setPasswordResetPin,
   verifyEmailAndResetPin,
+  deleteResetPin,
 } = require("../model/reset_pin/Reset_Pin_Model");
+const {
+  resetPassReqValidation,
+  updatePassValidation,
+} = require("../middleware/form_validation_middleware");
+
+/*===================================*
+        END OF IMPORTS
+*===================================*/
 
 router.all("/", (req, res, next) => {
   // res.json({ message: "return user from route" });
@@ -80,7 +88,7 @@ router.post("/login", async (req, res) => {
 });
 
 // reset password
-router.post("/reset-password", async (req, res) => {
+router.post("/reset-password", resetPassReqValidation, async (req, res) => {
   const { email } = req.body;
   const user = await getUserByEmail(email);
 
@@ -106,7 +114,7 @@ router.post("/reset-password", async (req, res) => {
   });
 });
 
-router.patch("/reset-password", async (req, res) => {
+router.patch("/reset-password", updatePassValidation, async (req, res) => {
   const { email, pin, newPassword } = req.body;
   const getPin = await verifyEmailAndResetPin(email, pin);
 
@@ -119,13 +127,11 @@ router.patch("/reset-password", async (req, res) => {
   }
 
   const hashedNewPass = await hashPassword(newPassword);
-  const user = await updatePassword({
-    email,
-    hashedNewPass,
-  });
+  const user = await updatePassword(email, hashedNewPass);
 
   if (user._id) {
     await emailProcessor({ email, type: "update-password-success" });
+    deleteResetPin(email, pin);
     return res.json({
       status: "success",
       message: "password has been succesfully updated",

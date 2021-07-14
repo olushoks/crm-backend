@@ -33,7 +33,7 @@ const verifyEmailAndResetPin = (email, pin) => {
 
 const deleteResetPin = (email, pin) => {
   try {
-    ResetPinSchema.findOneAndDelete({ email, pin }, (error, data) => {
+    ResetPinSchema.findOneAndDelete({ email, pin }, (error) => {
       if (error) {
         console.log(error);
       }

@@ -4,13 +4,18 @@ const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
-
+// mongoDB connection
+const mongoose = require("mongoose");
 // ROUTER
 const userRoute = require("./src/routes/user_route");
 const ticketRoute = require("./src/routes/ticket_route");
 const tokenRoute = require("./src/routes/token_route");
 // ERROR HANDLER
 const handleError = require("./src/utilities/error_handler");
+
+/*===================================*
+        END OF IMPORTS
+*===================================*/
 // PORT
 const port = process.env.PORT || 3001;
 
@@ -19,9 +24,6 @@ const app = express();
 
 // initializre cors
 app.use(cors());
-
-// mongoDB connection
-const mongoose = require("mongoose");
 
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,

@@ -9,6 +9,7 @@ const ResetPinSchema = new schema({
   },
   email: {
     type: String,
+    maxlength: 50,
     required: true,
   },
   added_at: {

@@ -1,6 +1,10 @@
 const redis = require("redis");
 const client = redis.createClient(process.env.REDIS_URL);
 
+/*===================================*
+        END OF IMPORTS
+*===================================*/
+
 const setJWT = (key, value) => {
   return new Promise((resolve, reject) => {
     try {

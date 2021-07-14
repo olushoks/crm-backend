@@ -47,7 +47,7 @@ const emailProcessor = ({ email, pin, type }) => {
       info = {
         from: process.env.NODEMAILER_USER,
         to: email,
-        subject: "Password Updatedd",
+        subject: "Password Updated",
         text: `Your password has been succesfully updated. .You may sign in using the new password`,
         html: `
             <b>Hello</b>
