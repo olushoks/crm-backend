@@ -5,6 +5,7 @@ const {
   getUserByEmail,
   getUserById,
   updatePassword,
+  storeRefreshJWT,
 } = require("../model/user/User_Model");
 const { hashPassword, comparePassword } = require("../helpers/hash_password");
 const { createAccessJWT, createRefreshJWT } = require("../helpers/jwt");
@@ -20,6 +21,7 @@ const {
   resetPassReqValidation,
   updatePassValidation,
 } = require("../middleware/form_validation_middleware");
+const { deleteJWT } = require("../helpers/redis");
 
 /*===================================*
         END OF IMPORTS
@@ -40,14 +42,13 @@ router.get("/", userAuth, async (req, res) => {
 
 // create new user route
 router.post("/", async (req, res) => {
-  const { name, company, address, phone, email, password } = req.body;
+  const { password } = req.body;
   try {
     //  hash password
     const hashedPass = await hashPassword(password);
     //update req body with hashed password
     const newUserObj = { ...req.body, password: hashedPass };
     const result = await createUser(newUserObj);
-    console.log(result);
     res.json({ message: "user created", result });
   } catch (error) {
     console.log(error);
@@ -141,6 +142,21 @@ router.patch("/reset-password", updatePassValidation, async (req, res) => {
     status: "error",
     message: "unable to update your password, try again later",
   });
+});
+
+// user logout <--> JWT invalidaton
+router.delete("/logout", userAuth, async (req, res) => {
+  const { authorization } = req.headers;
+  const _id = req.userId;
+
+  deleteJWT(authorization);
+  const result = await storeRefreshJWT("", _id);
+
+  if (result._id) {
+    return res.json({ status: "success", message: "Logged out succesfully" });
+  }
+
+  res.json({ status: "error", message: "Error logging out!" });
 });
 
 module.exports = router;

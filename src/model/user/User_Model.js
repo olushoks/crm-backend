@@ -56,7 +56,6 @@ const storeRefreshJWT = (token, _id) => {
       )
         .then((data) => resolve(data))
         .catch((error) => {
-          // console.log(error);
           reject(error);
         });
     } catch (error) {

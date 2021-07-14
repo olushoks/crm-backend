@@ -17,7 +17,7 @@ Content-Type: application/json
 
 {
     "email": "olu_shoks@pazcarrus.org",
-    "password": "secret123"
+    "password": "secret246"
 }
 
 ### Get user profile
@@ -46,5 +46,8 @@ Content-Type: application/json
     "newPassword": "secret246"
 }
 
+### User logout endpoint
+DELETE http://localhost:5000/v1/user/logout HTTP/1.1
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im9sdV9zaG9rc0BwYXpjYXJydXMub3JnIiwiaWF0IjoxNjI2MjMwMjU0LCJleHAiOjE2MjYyMzExNTR9.edn9AWQZFtB6p-NZ_ABYB8goTLE5PIoNl4wxzcsLoAc
     
 
