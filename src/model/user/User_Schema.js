@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-const schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-const UserSchema = new schema({
+const UserSchema = new Schema({
   name: { type: String, maxlength: 50, required: true },
   company: { type: String, maxlength: 50, required: true },
   address: { type: String, maxlength: 100 },
