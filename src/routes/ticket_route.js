@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { insertTicket, getTickets } = require("../model/ticket/Ticket_Model");
+const {
+  insertTicket,
+  getTickets,
+  getSingleTicketById,
+} = require("../model/ticket/Ticket_Model");
 const { userAuth } = require("../middleware/auth");
 
 /*===================================*
@@ -48,7 +52,6 @@ router.post("/", userAuth, async (req, res) => {
 router.get("/", userAuth, async (req, res) => {
   try {
     const userId = req.userId;
-
     const result = await getTickets(userId);
 
     if (result.length) {
@@ -57,6 +60,23 @@ router.get("/", userAuth, async (req, res) => {
         result,
       });
     }
+  } catch (error) {
+    res.json({ status: "error", message: error.message });
+  }
+});
+
+// get specific ticket for specific user
+router.get("/:ticketid", userAuth, async (req, res) => {
+  try {
+    const { ticketid } = req.params;
+    const userId = req.userId;
+
+    const result = await getSingleTicketById(userId, ticketid);
+
+    return res.json({
+      status: "success",
+      result,
+    });
   } catch (error) {
     res.json({ status: "error", message: error.message });
   }
