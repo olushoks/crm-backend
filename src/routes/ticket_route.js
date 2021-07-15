@@ -9,6 +9,7 @@ const {
   deleteTicket,
 } = require("../model/ticket/Ticket_Model");
 const { userAuth } = require("../middleware/auth");
+const { getUserById } = require("../model/user/User_Model");
 
 /*===================================*
         END OF IMPORTS
@@ -88,10 +89,10 @@ router.get("/:ticketid", userAuth, async (req, res) => {
 // reply to message from user
 router.put("/:ticketid", userAuth, async (req, res) => {
   try {
-    const { message, sender } = req.body;
+    const { message } = req.body;
     const client_id = req.userId;
     const { ticketid: _id } = req.params;
-
+    const { name: sender } = await getUserById(client_id);
     const result = await clientReply({ _id, message, client_id, sender });
 
     if (result._id) {
