@@ -10,6 +10,10 @@ const {
 } = require("../model/ticket/Ticket_Model");
 const { userAuth } = require("../middleware/auth");
 const { getUserById } = require("../model/user/User_Model");
+const {
+  createNewTicketValidattion,
+  replyMessageValidation,
+} = require("../middleware/form_validation_middleware");
 
 /*===================================*
         END OF IMPORTS
@@ -21,12 +25,13 @@ router.all("/", (req, res, next) => {
 });
 
 // create new tickekt
-router.post("/", userAuth, async (req, res) => {
+router.post("/", [userAuth, createNewTicketValidattion], async (req, res) => {
   try {
-    const { subject, sender, message } = req.body;
-    const userId = req.userId;
+    const { subject, message } = req.body;
+    const client_id = req.userId;
+    const { name: sender } = await getUserById(client_id);
     const ticketObj = {
-      client_id: userId,
+      client_id,
       subject,
       conversation: [
         {
@@ -55,8 +60,8 @@ router.post("/", userAuth, async (req, res) => {
 // get all tickets for specific user
 router.get("/", userAuth, async (req, res) => {
   try {
-    const userId = req.userId;
-    const result = await getTickets(userId);
+    const client_id = req.userId;
+    const result = await getTickets(client_id);
 
     if (result.length) {
       return res.json({
@@ -73,9 +78,9 @@ router.get("/", userAuth, async (req, res) => {
 router.get("/:ticketid", userAuth, async (req, res) => {
   try {
     const { ticketid } = req.params;
-    const userId = req.userId;
+    const client_id = req.userId;
 
-    const result = await getSingleTicketById(userId, ticketid);
+    const result = await getSingleTicketById(client_id, ticketid);
 
     return res.json({
       status: "success",
@@ -87,29 +92,33 @@ router.get("/:ticketid", userAuth, async (req, res) => {
 });
 
 // reply to message from user
-router.put("/:ticketid", userAuth, async (req, res) => {
-  try {
-    const { message } = req.body;
-    const client_id = req.userId;
-    const { ticketid: _id } = req.params;
-    const { name: sender } = await getUserById(client_id);
-    const result = await clientReply({ _id, message, client_id, sender });
+router.put(
+  "/:ticketid",
+  [userAuth, replyMessageValidation],
+  async (req, res) => {
+    try {
+      const { message } = req.body;
+      const client_id = req.userId;
+      const { ticketid: _id } = req.params;
+      const { name: sender } = await getUserById(client_id);
+      const result = await clientReply({ _id, message, client_id, sender });
 
-    if (result._id) {
+      if (result._id) {
+        return res.json({
+          status: "success",
+          message: "message has been updated",
+        });
+      }
+
       return res.json({
-        status: "success",
-        message: "message has been updated",
+        status: "error",
+        message: "unable to update your message, please try again later",
       });
+    } catch (error) {
+      res.json({ status: "error", message: error.message });
     }
-
-    return res.json({
-      status: "error",
-      message: "unable to update your message, please try again later",
-    });
-  } catch (error) {
-    res.json({ status: "error", message: error.message });
   }
-});
+);
 
 // update ticket status to close
 router.patch("/close-ticket/:ticketid", userAuth, async (req, res) => {
@@ -136,7 +145,7 @@ router.patch("/close-ticket/:ticketid", userAuth, async (req, res) => {
 });
 
 // delete ticket
-router.delete("/close-ticket/:ticketid", userAuth, async (req, res) => {
+router.delete("/:ticketid", userAuth, async (req, res) => {
   try {
     const { ticketid: _id } = req.params;
     const client_id = req.userId;
