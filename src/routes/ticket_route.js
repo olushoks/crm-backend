@@ -4,6 +4,7 @@ const {
   insertTicket,
   getTickets,
   getSingleTicketById,
+  clientReply,
 } = require("../model/ticket/Ticket_Model");
 const { userAuth } = require("../middleware/auth");
 
@@ -76,6 +77,30 @@ router.get("/:ticketid", userAuth, async (req, res) => {
     return res.json({
       status: "success",
       result,
+    });
+  } catch (error) {
+    res.json({ status: "error", message: error.message });
+  }
+});
+
+// reply to message from user
+router.put("/:ticketid", userAuth, async (req, res) => {
+  try {
+    const { message, sender } = req.body;
+    const { ticketid: _id } = req.params;
+
+    const result = await clientReply({ _id, message, sender });
+
+    if (result._id) {
+      return res.json({
+        status: "success",
+        message: "message has been updated",
+      });
+    }
+
+    return res.json({
+      status: "error",
+      message: "unable to update your message, please try again later",
     });
   } catch (error) {
     res.json({ status: "error", message: error.message });
