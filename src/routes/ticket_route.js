@@ -5,6 +5,7 @@ const {
   getTickets,
   getSingleTicketById,
   clientReply,
+  closeTicket,
 } = require("../model/ticket/Ticket_Model");
 const { userAuth } = require("../middleware/auth");
 
@@ -101,6 +102,30 @@ router.put("/:ticketid", userAuth, async (req, res) => {
     return res.json({
       status: "error",
       message: "unable to update your message, please try again later",
+    });
+  } catch (error) {
+    res.json({ status: "error", message: error.message });
+  }
+});
+
+// update ticket status to close
+router.patch("/close-ticket/:ticketid", userAuth, async (req, res) => {
+  try {
+    const { ticketid: _id } = req.params;
+    const client_id = req.userId;
+
+    const result = await closeTicket({ _id, client_id });
+
+    if (result._id) {
+      return res.json({
+        status: "success",
+        message: "Ticket has been closed",
+      });
+    }
+
+    return res.json({
+      status: "error",
+      message: "unable to close the ticket at this time, please try again",
     });
   } catch (error) {
     res.json({ status: "error", message: error.message });
