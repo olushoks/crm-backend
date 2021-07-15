@@ -72,10 +72,23 @@ const closeTicket = ({ _id, client_id }) => {
   });
 };
 
+const deleteTicket = ({ _id, client_id }) => {
+  return new Promise((resolve, reject) => {
+    try {
+      TicketSchema.findByIdAndDelete({ _id, client_id })
+        .then((data) => resolve(data))
+        .catch((error) => reject(error));
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
 module.exports = {
   insertTicket,
   getTickets,
   getSingleTicketById,
   clientReply,
   closeTicket,
+  deleteTicket,
 };

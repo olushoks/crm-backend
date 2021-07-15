@@ -6,6 +6,7 @@ const {
   getSingleTicketById,
   clientReply,
   closeTicket,
+  deleteTicket,
 } = require("../model/ticket/Ticket_Model");
 const { userAuth } = require("../middleware/auth");
 
@@ -88,9 +89,10 @@ router.get("/:ticketid", userAuth, async (req, res) => {
 router.put("/:ticketid", userAuth, async (req, res) => {
   try {
     const { message, sender } = req.body;
+    const client_id = req.userId;
     const { ticketid: _id } = req.params;
 
-    const result = await clientReply({ _id, message, sender });
+    const result = await clientReply({ _id, message, client_id, sender });
 
     if (result._id) {
       return res.json({
@@ -126,6 +128,23 @@ router.patch("/close-ticket/:ticketid", userAuth, async (req, res) => {
     return res.json({
       status: "error",
       message: "unable to close the ticket at this time, please try again",
+    });
+  } catch (error) {
+    res.json({ status: "error", message: error.message });
+  }
+});
+
+// delete ticket
+router.delete("/close-ticket/:ticketid", userAuth, async (req, res) => {
+  try {
+    const { ticketid: _id } = req.params;
+    const client_id = req.userId;
+
+    await deleteTicket({ _id, client_id });
+
+    return res.json({
+      status: "success",
+      message: "ticket has been deleted",
     });
   } catch (error) {
     res.json({ status: "error", message: error.message });
