@@ -36,7 +36,7 @@ Content-Type: application/json
     "email": "olu_shoks@pazcarrus.org"
 }
 
-### Update password endpoing
+### Update password endpoint
 PATCH http://localhost:5000/v1/user/reset-password HTTP/1.1
 Content-Type: application/json
 

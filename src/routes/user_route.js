@@ -36,8 +36,9 @@ router.all("/", (req, res, next) => {
 router.get("/", userAuth, async (req, res) => {
   const _id = req.userId;
 
-  const userProfile = await getUserById(_id);
-  res.json({ user: userProfile });
+  const { name, email } = await getUserById(_id);
+
+  res.json({ user: { _id, name, email } });
 });
 
 // create new user route
@@ -48,7 +49,9 @@ router.post("/", async (req, res) => {
     const hashedPass = await hashPassword(password);
     //update req body with hashed password
     const newUserObj = { ...req.body, password: hashedPass };
+
     const result = await createUser(newUserObj);
+
     res.json({ message: "user created", result });
   } catch (error) {
     console.log(error);
@@ -66,7 +69,7 @@ router.post("/login", async (req, res) => {
 
   const user = await getUserByEmail(email);
   if (!user) {
-    return res.json({ status: "error", message: "invalid credentials" });
+    return res.json({ status: "error", message: "Invalid email or password" });
   }
 
   // const passwordFromDB = user && user._id ? user.password : null;
