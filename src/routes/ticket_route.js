@@ -48,6 +48,7 @@ router.post("/", [userAuth, createNewTicketValidattion], async (req, res) => {
         message: "New ticket has been created",
       });
     }
+
     return res.json({
       status: "error",
       message: "Unablee to create the ticket. Please try again",
@@ -80,7 +81,7 @@ router.get("/:ticketid", userAuth, async (req, res) => {
     const { ticketid } = req.params;
     const client_id = req.userId;
 
-    const result = await getSingleTicketById(client_id, ticketid);
+    const [result] = await getSingleTicketById(client_id, ticketid);
 
     return res.json({
       status: "success",
@@ -101,6 +102,7 @@ router.put(
       const client_id = req.userId;
       const { ticketid: _id } = req.params;
       const { name: sender } = await getUserById(client_id);
+
       const result = await clientReply({ _id, message, client_id, sender });
 
       if (result._id) {

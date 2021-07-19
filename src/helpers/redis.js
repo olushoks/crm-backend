@@ -33,7 +33,7 @@ const getJWT = (key) => {
 
 const deleteJWT = (key) => {
   try {
-    client.del(key);
+    client.DEL(key);
   } catch (error) {
     console.log(err);
   }

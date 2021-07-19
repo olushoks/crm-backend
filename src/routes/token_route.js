@@ -12,7 +12,8 @@ router.get("/new-access-jwt", async (req, res, next) => {
 
     if (userProfile._id) {
       let tokenExp = userProfile.refreshJWT.added_at;
-      const dbRefreshToken = userProfile.refreshToken.token;
+      const dbRefreshToken = userProfile.refreshJWT.token;
+
       tokenExp = tokenExp.setDate(
         tokenExp.getDate() + +process.env.JWT_REFRESH_TOKEN_EXP_IN
       );

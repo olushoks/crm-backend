@@ -59,7 +59,7 @@ const clientReply = ({ _id, client_id, message, sender }) => {
 const closeTicket = ({ _id, client_id }) => {
   return new Promise((resolve, reject) => {
     try {
-      TicketSchema.findByIdAndUpdate(
+      TicketSchema.findOneAndUpdate(
         { _id, client_id },
         { status: "closed" },
         { new: true }
