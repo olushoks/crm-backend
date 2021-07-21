@@ -23,6 +23,7 @@ const {
   newUserRegistration,
 } = require("../middleware/form_validation_middleware");
 const { deleteJWT } = require("../helpers/redis");
+const verificationLink = "http://localhost:3000/verification";
 
 /*===================================*
         END OF IMPORTS
@@ -52,6 +53,13 @@ router.post("/", newUserRegistration, async (req, res) => {
     const newUserObj = { ...req.body, password: hashedPass };
 
     const result = await createUser(newUserObj);
+
+    await emailProcessor({
+      email,
+      pin: newPin.pin,
+      type: "new-user-verification",
+      verificationLink,
+    });
 
     res.json({ status: "success", message: "user created", result });
   } catch (error) {

@@ -23,7 +23,7 @@ const send = (info) => {
   });
 };
 
-const emailProcessor = ({ email, pin, type }) => {
+const emailProcessor = ({ email, pin, type, verificationLink = "" }) => {
   let info = null;
 
   switch (type) {
@@ -50,6 +50,19 @@ const emailProcessor = ({ email, pin, type }) => {
         html: `
             <b>Hello</b>
             <p>Your password has been succesfully updated. .You may sign in using the new password</p>`,
+      };
+      send(info);
+      break;
+    case "new-user-verification":
+      info = {
+        from: process.env.NODEMAILER_USER,
+        to: email,
+        subject: "Verify new user",
+        text: `Please follow the link below to verify your email address to complete account set up.
+        <p>${verificationLink}</p>`,
+        html: `
+            <b>Hello</b>
+            <p>Please follow the link below to verify your email address to complete account set up</p>`,
       };
       send(info);
       break;
