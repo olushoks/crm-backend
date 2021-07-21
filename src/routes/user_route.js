@@ -20,6 +20,7 @@ const {
 const {
   resetPassReqValidation,
   updatePassValidation,
+  newUserRegistration,
 } = require("../middleware/form_validation_middleware");
 const { deleteJWT } = require("../helpers/redis");
 
@@ -42,7 +43,7 @@ router.get("/", userAuth, async (req, res) => {
 });
 
 // create new user route
-router.post("/", async (req, res) => {
+router.post("/", newUserRegistration, async (req, res) => {
   const { password } = req.body;
   try {
     //  hash password
@@ -52,10 +53,14 @@ router.post("/", async (req, res) => {
 
     const result = await createUser(newUserObj);
 
-    res.json({ message: "user created", result });
+    res.json({ status: "success", message: "user created", result });
   } catch (error) {
+    let message = "unable to create new user at this time";
+    if (error.message.includes("duplicate key error collection")) {
+      message = "An existing account found with this email";
+    }
     console.log(error);
-    res.json({ status: "error", message: error.message });
+    res.json({ status: "error", message });
   }
 });
 
