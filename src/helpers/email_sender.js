@@ -58,11 +58,11 @@ const emailProcessor = ({ email, pin, type, verificationLink = "" }) => {
         from: process.env.NODEMAILER_USER,
         to: email,
         subject: "Verify new user",
-        text: `Please follow the link below to verify your email address to complete account set up.
-        <p>${verificationLink}</p>`,
+        text: `Please follow the link below to verify your email address to complete account set up.`,
         html: `
             <b>Hello</b>
-            <p>Please follow the link below to verify your email address to complete account set up</p>`,
+            <p>Please follow the link below to verify your email address to complete account set up</p>
+            <p>${verificationLink}</p>`,
       };
       send(info);
       break;

@@ -87,6 +87,29 @@ const updatePassword = (email, newPassword) => {
     }
   });
 };
+const verifyNewUser = (_id, email) => {
+  return new Promise((resolve, reject) => {
+    try {
+      UserSchema.findOneAndUpdate(
+        { _id, email, isVerified: false },
+        {
+          $set: {
+            isVerified: true,
+          },
+        },
+        { new: true }
+      )
+        .then((data) => resolve(data))
+        .catch((error) => {
+          console.log(error);
+          reject(error);
+        });
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+};
 
 module.exports = {
   createUser,
@@ -94,4 +117,5 @@ module.exports = {
   getUserById,
   storeRefreshJWT,
   updatePassword,
+  verifyNewUser,
 };

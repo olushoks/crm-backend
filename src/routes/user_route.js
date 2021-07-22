@@ -6,6 +6,7 @@ const {
   getUserById,
   updatePassword,
   storeRefreshJWT,
+  verifyNewUser,
 } = require("../model/user/User_Model");
 const { hashPassword, comparePassword } = require("../helpers/hash_password");
 const { createAccessJWT, createRefreshJWT } = require("../helpers/jwt");
@@ -23,6 +24,7 @@ const {
   newUserRegistration,
 } = require("../middleware/form_validation_middleware");
 const { deleteJWT } = require("../helpers/redis");
+
 const verificationLink = "http://localhost:3000/verification";
 
 /*===================================*
@@ -43,6 +45,28 @@ router.get("/", userAuth, async (req, res) => {
   res.json({ user: { _id, name, email } });
 });
 
+// verify new user
+router.patch("/verify", async (req, res) => {
+  try {
+    const { _id, email } = req.body;
+    const result = await verifyNewUser(_id, email);
+
+    if (result._id) {
+      return res.json({
+        status: "success",
+        message: "Your account has been activated, you may sign in now",
+      });
+    }
+    res.json({
+      status: "error",
+      message: "Invalid request!",
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ status: "error", message: error.message });
+  }
+});
+
 // create new user route
 router.post("/", newUserRegistration, async (req, res) => {
   const { password } = req.body;
@@ -55,13 +79,16 @@ router.post("/", newUserRegistration, async (req, res) => {
     const result = await createUser(newUserObj);
 
     await emailProcessor({
-      email,
-      pin: newPin.pin,
+      email: req.body.email,
       type: "new-user-verification",
-      verificationLink,
+      verificationLink: `${verificationLink}${result._id}`,
     });
 
-    res.json({ status: "success", message: "user created", result });
+    res.json({
+      status: "success",
+      message: "user created",
+      result: { _id: result._id, name: result.name, email: result.email },
+    });
   } catch (error) {
     let message = "unable to create new user at this time";
     if (error.message.includes("duplicate key error collection")) {

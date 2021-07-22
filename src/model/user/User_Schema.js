@@ -20,6 +20,11 @@ const UserSchema = new Schema({
       default: Date.now(),
     },
   },
+  isVerified: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
 });
 
 module.exports = {
