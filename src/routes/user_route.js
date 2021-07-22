@@ -25,7 +25,7 @@ const {
 } = require("../middleware/form_validation_middleware");
 const { deleteJWT } = require("../helpers/redis");
 
-const verificationLink = "http://localhost:3000/verification";
+const verificationLink = "http://localhost:3000/new-user-verification/";
 
 /*===================================*
         END OF IMPORTS
@@ -51,7 +51,7 @@ router.patch("/verify", async (req, res) => {
     const { _id, email } = req.body;
     const result = await verifyNewUser(_id, email);
 
-    if (result._id) {
+    if (result && result._id) {
       return res.json({
         status: "success",
         message: "Your account has been activated, you may sign in now",
@@ -62,8 +62,8 @@ router.patch("/verify", async (req, res) => {
       message: "Invalid request!",
     });
   } catch (error) {
-    console.log(error);
-    res.json({ status: "error", message: error.message });
+    console.log(error.message);
+    res.json({ status: "error", message: "Invalid request!" });
   }
 });
 
@@ -81,7 +81,7 @@ router.post("/", newUserRegistration, async (req, res) => {
     await emailProcessor({
       email: req.body.email,
       type: "new-user-verification",
-      verificationLink: `${verificationLink}${result._id}`,
+      verificationLink: `${verificationLink}${result._id}/${result.email}`,
     });
 
     res.json({
@@ -110,6 +110,14 @@ router.post("/login", async (req, res) => {
   const user = await getUserByEmail(email);
   if (!user) {
     return res.json({ status: "error", message: "Invalid email or password" });
+  }
+
+  if (!user.isVerified) {
+    return res.json({
+      status: "error",
+      message:
+        "This account has not been verified.\nPlease use the verification link sent to the email provided",
+    });
   }
 
   // const passwordFromDB = user && user._id ? user.password : null;

@@ -62,7 +62,7 @@ const emailProcessor = ({ email, pin, type, verificationLink = "" }) => {
         html: `
             <b>Hello</b>
             <p>Please follow the link below to verify your email address to complete account set up</p>
-            <p>${verificationLink}</p>`,
+            <a href=${verificationLink} target="_blank">verification Link</a>`,
       };
       send(info);
       break;
