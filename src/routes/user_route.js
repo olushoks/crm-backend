@@ -156,7 +156,7 @@ router.post("/reset-password", resetPassReqValidation, async (req, res) => {
   res.json({
     status: "success",
     message:
-      "if email exist in database, password reset pin will be sent shortly",
+      "If email exist in database, password reset pin will be sent shortly",
   });
 });
 
@@ -164,25 +164,27 @@ router.patch("/reset-password", updatePassValidation, async (req, res) => {
   const { email, pin, newPassword } = req.body;
   const getPin = await verifyEmailAndResetPin(email, pin);
 
-  const pinResetDate = getPin.added_at;
-  let expiryDate = pinResetDate.setDate(pinResetDate.getDate() + 1);
-  const today = new Date();
+  if (getPin?.added_at) {
+    const pinResetDate = getPin.added_at;
+    let expiryDate = pinResetDate.setDate(pinResetDate.getDate() + 1);
+    const today = new Date();
 
-  if (today > expiryDate) {
-    return res.json({ status: "error", message: "invalid or expired pin" });
+    if (today > expiryDate) {
+      return res.json({ status: "error", message: "invalid or expired pin" });
+    }
+    const hashedNewPass = await hashPassword(newPassword);
+    const user = await updatePassword(email, hashedNewPass);
+
+    if (user._id) {
+      await emailProcessor({ email, type: "update-password-success" });
+      deleteResetPin(email, pin);
+      return res.json({
+        status: "success",
+        message: "password has been succesfully updated",
+      });
+    }
   }
 
-  const hashedNewPass = await hashPassword(newPassword);
-  const user = await updatePassword(email, hashedNewPass);
-
-  if (user._id) {
-    await emailProcessor({ email, type: "update-password-success" });
-    deleteResetPin(email, pin);
-    return res.json({
-      status: "success",
-      message: "password has been succesfully updated",
-    });
-  }
   res.json({
     status: "error",
     message: "unable to update your password, try again later",

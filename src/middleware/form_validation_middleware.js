@@ -6,7 +6,7 @@ const email = Joi.string().email({
 });
 
 const pin = Joi.number().min(10000).max(999999).required();
-const password = Joi.string().min(8).max(30).required();
+const newPassword = Joi.string().min(8).max(30).required();
 const phone = Joi.number().min(1900000001).max(9999999999).required();
 const string = Joi.string().min(3).max(50).required();
 const subject = Joi.string().min(5).max(50).required();
@@ -23,7 +23,7 @@ const resetPassReqValidation = (req, res, next) => {
 };
 
 const updatePassValidation = (req, res, next) => {
-  const schema = Joi.object({ email, pin, password });
+  const schema = Joi.object({ email, pin, newPassword });
   const value = schema.validate(req.body);
   if (value.error) {
     return res.json({ status: "error", message: value.error.message });
