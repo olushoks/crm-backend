@@ -101,11 +101,9 @@ const verifyNewUser = (_id, email) => {
       )
         .then((data) => resolve(data))
         .catch((error) => {
-          console.log(error);
           reject(error);
         });
     } catch (error) {
-      console.log(error);
       reject(error);
     }
   });

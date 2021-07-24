@@ -151,16 +151,10 @@ router.post("/reset-password", resetPassReqValidation, async (req, res) => {
       pin: newPin.pin,
       type: "request-new-password",
     });
-
-    return res.json({
-      status: "success",
-      message:
-        "if email exist in database, password reset pin will be sent shortly",
-    });
   }
 
   res.json({
-    status: "error",
+    status: "success",
     message:
       "if email exist in database, password reset pin will be sent shortly",
   });
